@@ -1,0 +1,10 @@
+digraph {
+	A -> C [weight=20.00]
+	A -> D [weight=3.85]
+	B -> E [weight=7.69]
+	C -> A [weight=2.13]
+	C -> E [weight=5.26]
+	C -> B [weight=2.04]
+	D -> E [weight=1.11]
+	D -> A [weight=1.85]
+}
