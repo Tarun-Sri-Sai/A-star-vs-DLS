@@ -4,9 +4,10 @@ from os import listdir, path, mkdir
 def main():
     graphs_path: str = path.join('..', '..', 'a-star-vs-dls', 'graphs')
     files: list[str] = listdir(graphs_path)
-    mkdir(path.join('..', 'dots'))
+    dots_path: str = path.join('..', 'dots')
+    mkdir(dots_path)
     for file in files:
-        with open(path.join('..', 'dots', path.splitext(file)[0] + '.dot'), 'w') as writer:
+        with open(path.join(dots_path, path.splitext(file)[0] + '.dot'), 'w') as writer:
             printed: str = 'digraph {\n'
             with open(path.join(graphs_path, file), 'r') as reader:
                 nnodes: int = int(reader.readline().strip())
