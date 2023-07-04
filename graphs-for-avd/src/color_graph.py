@@ -7,7 +7,7 @@ def main():
 
     for file in files:
         print(file)
-        graph_path: str = path.join(dir_path, input('graph path1: '))
+        graph_path: str = input('graph path1: ')
         path_nodes: list[str] = graph_path.split(' -> ')
         path_list: list[tuple[str, str]] = []
         for i in range(len(path_nodes) - 1):
@@ -29,7 +29,7 @@ def main():
 
                     writer.write('\t' + line[0:-1] + ', color=\'red\']' + '\n')
 
-        graph_path: str = path.join(dir_path, input('graph path2: '))
+        graph_path: str = input('graph path2: ')
         path_nodes: list[str] = graph_path.split(' -> ')
         path_list: list[tuple[str, str]] = []
         for i in range(len(path_nodes) - 1):
