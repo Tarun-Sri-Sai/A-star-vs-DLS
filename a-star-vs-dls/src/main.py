@@ -1,17 +1,16 @@
-import random
-import sys
-import time
-import os
+from sys import setrecursionlimit, stdout, stdin
+from random import randint
+from time import perf_counter
+from os import getcwd
 
 
-sys.setrecursionlimit(int(1e8))
+setrecursionlimit(int(1e8))
 
 
 INF = int(1e9)
-ONE_HUNDREDTH_SEC = 0.01
-ONE_FIFTH_SEC = 0.2
 
-class Graph:
+
+class AStarVsDLS:
     def __init__(self, adjacency_list, heuristics):
         self.adjacency_list = adjacency_list
         self.heuristics = heuristics
@@ -93,357 +92,259 @@ class Graph:
         return False
 
 
-def get_adjacency_list():
-    n_vertices = int(input("Enter number of vertices: "))
-    if n_vertices > 26:
-        return
+class Input:
+    def __init__(self):
+        print("How do you want your input:\n\t1. Stdin\n\t2. File path")
+        choice = int(input("\nEnter your choice: "))
+        match choice:
+            case 1:
+                self.get_adjacency_list()
 
-    vertices = [chr(i + 65) for i in range(n_vertices)]
-    print(f"Vertices: {vertices}\n")
+                self.start = input("Enter starting node: ")
+                self.end = input("Enter destination node: ")
+                self.depth = int(
+                    input("Enter depth for depth limited search: "))
 
-    adjacency_list = {}
+                self.get_heuristics()
 
-    print("How do you want your graph:\n\t1. Randomly generated\n\t2. Custom input")
-    choice = int(input("\nEnter your Choice: "))
+            case 2:
+                print("\n", getcwd(), sep="")
+                with open(input("\nEnter file path: "), "r") as file_in:
+                    self.get_adjacency_list(file_in)
 
-    if choice == 1:
-        for vertex in vertices:
-            adjacency_list[vertex] = {}
+                    self.start = file_in.readline().strip()
+                    self.end = file_in.readline().strip()
+                    self.depth = int(file_in.readline().strip())
 
-            for _ in range(random.randint(0, n_vertices - 1)):
-                curr_vertex = vertices[random.randint(0, n_vertices - 1)]
+                    self.get_heuristics(file_in)
 
-                while curr_vertex == vertex or curr_vertex in adjacency_list[vertex]:
-                    curr_vertex = vertices[random.randint(0, n_vertices - 1)]
+    def generate_random_adjacency_list(self):
+        n_vertices = len(self.vertices)
+        for vertex in self.vertices:
+            self.adjacency_list[vertex] = {}
 
-                adjacency_list[vertex][curr_vertex] = random.randint(1, 99)
+            for _ in range(randint(0, n_vertices - 1)):
+                curr_vertex = self.vertices[randint(0, n_vertices - 1)]
 
-    else:
-        print("\nEnter the adjacency list", end=" ")
-        print("format: \"vertex_name,weight\" pairs separated by space, \"None\" for empty list):")
+                while curr_vertex == vertex or curr_vertex in self.adjacency_list[vertex]:
+                    curr_vertex = self.vertices[randint(0, n_vertices - 1)]
 
-        for vertex in vertices:
-            line = input(f"For {vertex}: ")
+                self.adjacency_list[vertex][curr_vertex] = randint(1, 99)
 
-            adjacency_list[vertex] = {}
+    def read_custom_adjacency_list(self, file_in=stdin):
+        if file_in == stdin:
+            print("\nEnter the adjacency list", end=" ")
+            print(
+                "format: \"vertex_name,weight\" pairs separated by space, \"None\" for empty list):")
 
-            if line != "None":
-                pairs = line.split()
+        for vertex in self.vertices:
+            if file_in == stdin:
+                print(f"For {vertex}: ", end="")
+                stdout.flush()
 
-                for pair in pairs:
-                    comma_sep_fields = pair.split(sep=",")
-                    adjacency_list[vertex][comma_sep_fields[0]] = int(comma_sep_fields[1])
-
-    print("\nGraph:")
-    time.sleep(ONE_HUNDREDTH_SEC)
-    for vertex in vertices: 
-        print(f"{vertex}: ", end="")
-        if adjacency_list[vertex]:
-            i_max = len(adjacency_list[vertex]) - 1
-
-            print("{", end="")
-            for i, (neighbor, weight) in enumerate(adjacency_list[vertex].items()):
-                print(f"{neighbor}: {weight:3d}", end="")
-                if i == i_max:
-                    print("}")
-                else:
-                    print(", ", end="")
-                    
-                sys.stdout.flush()
-        else:
-            print("{}")
-
-    print()
-
-    return adjacency_list
-
-
-def get_adjacency_list_from_file(file_in):
-    print("Enter number of vertices: ", end="")
-    sys.stdout.flush()
-    n_vertices = int(file_in.readline().strip())
-
-    if n_vertices > 26:
-        return
-
-    vertices = [chr(i + 65) for i in range(n_vertices)]
-    print(f"Vertices: {vertices}\n")
-
-    adjacency_list = {}
-
-    print("How do you want your graph:\n\t1. Randomly generated\n\t2. Custom input")
-    print("\nEnter your Choice: ", end="")
-    sys.stdout.flush()
-    choice = int(file_in.readline().strip())
-
-    if choice == 1:
-        for vertex in vertices:
-            adjacency_list[vertex] = {}
-
-            for _ in range(random.randint(0, n_vertices - 1)):
-                curr_vertex = vertices[random.randint(0, n_vertices - 1)]
-
-                while curr_vertex == vertex or curr_vertex in adjacency_list[vertex]:
-                    curr_vertex = vertices[random.randint(0, n_vertices - 1)]
-
-                adjacency_list[vertex][curr_vertex] = random.randint(1, 99)
-
-    else:
-        print("\nEnter the adjacency list", end=" ")
-        print("format: \"vertex_name,weight\" pairs separated by space, \"None\" for empty list):")
-
-        for vertex in vertices:
-            print(f"For {vertex}: ", end="")
-            sys.stdout.flush()
             line = file_in.readline().strip()
 
-            adjacency_list[vertex] = {}
+            self.adjacency_list[vertex] = {}
 
-            if line != "None":
-                pairs = line.split()
+            if line == "None":
+                continue
 
-                for pair in pairs:
-                    comma_sep_fields = pair.split(sep=",")
-                    adjacency_list[vertex][comma_sep_fields[0]] = int(comma_sep_fields[1])
+            pairs = line.split()
 
-    print("\nGraph:")
-    time.sleep(ONE_HUNDREDTH_SEC)
-    for vertex in vertices: 
-        print(f"{vertex}: ", end="")
-        if adjacency_list[vertex]:
-            i_max = len(adjacency_list[vertex]) - 1
+            for pair in pairs:
+                comma_sep_fields = pair.split(sep=",")
+                self.adjacency_list[vertex][comma_sep_fields[0]] = int(
+                    comma_sep_fields[1])
+
+    def get_adjacency_list(self, file_in=stdin):
+        if file_in == stdin:
+            print("Enter number of vertices: ", end="")
+            stdout.flush()
+
+        n_vertices = int(file_in.readline().strip())
+
+        if n_vertices > 26:
+            return
+
+        self.vertices = [chr(i + 65) for i in range(n_vertices)]
+        print(f"Vertices: {self.vertices}\n")
+
+        self.adjacency_list = {}
+
+        if file_in == stdin:
+            print(
+                "How do you want your graph:\n\t1. Randomly generated\n\t2. Custom input")
+            print("\nEnter your Choice: ", end="")
+            stdout.flush()
+
+        choice = int(file_in.readline().strip())
+
+        match choice:
+            case 1:
+                self.generate_random_adjacency_list()
+
+            case 2:
+                self.read_custom_adjacency_list(file_in)
+
+        self.print_graph()
+
+    def print_graph(self):
+        print("\nGraph:")
+        for vertex in self.vertices:
+            print(f"{vertex}: ", end="")
+            if not self.adjacency_list[vertex]:
+                print("{}")
+                continue
+
+            i_max = len(self.adjacency_list[vertex]) - 1
 
             print("{", end="")
-            for i, (neighbor, weight) in enumerate(adjacency_list[vertex].items()):
+            for i, (neighbor, weight) in enumerate(self.adjacency_list[vertex].items()):
                 print(f"{neighbor}: {weight:3d}", end="")
                 if i == i_max:
                     print("}")
                 else:
                     print(", ", end="")
-                    
-                sys.stdout.flush()
-        else:
-            print("{}")
 
-    print()
+                stdout.flush()
 
-    return adjacency_list
+        print()
 
+    def get_heuristics(self, file_in=stdin):
+        self.heuristics = {}
 
-def find_dist(adjacency_list, start, end):
-    queue = [start]
-    visited = set(start)
-    dist = 0
-    
-    while queue:
-        size = len(queue)
+        if file_in == stdin:
+            print("\nHow do you want your heuristics:\n\t1. Calculated\n\t2. Custom input")
+            print("\nEnter your Choice: ", end="")
+            stdout.flush()
 
-        for _ in range(size):
-            node = queue.pop(0)
-            if node == end:
-                return dist
-            
-            for neighbor in adjacency_list[node]:
-                if neighbor not in visited:
-                    visited.add(neighbor)
-                    queue.append(neighbor)
+        choice = int(file_in.readline().strip())
 
-        dist += 1
+        match choice:
+            case 1:
+                for vertex in self.vertices:
+                    if vertex == self.end:
+                        self.heuristics[vertex] = 0
+                        continue
 
-    return INF
+                    self.heuristics[vertex] = self.find_heuristic(vertex)
 
+            case 2:
+                for vertex in self.vertices:
+                    if file_in == stdin:
+                        print(f"Enter heuristic for {vertex}: ", end="")
+                        stdout.flush()
 
-def find_heuristic(adjacency_list, start, end):
-    return find_dist(adjacency_list, start, end) * 10
+                    self.heuristics[vertex] = int(file_in.readline().strip())
 
+        self.print_heuristics()
 
-def get_heuristics(adjacency_list, end_vertex):
-    print("\nHow do you want your heuristics:\n\t1. Calculated\n\t2. Custom input")
-    choice = int(input("\nEnter your Choice: "))
+    def print_heuristics(self):
+        print("\nHeuristics:\t", end="")
+        for i, vertex in enumerate(self.vertices):
+            print(
+                f"({vertex}: ", f"{self.heuristics[vertex]:3d})" if self.heuristics[vertex] < INF else "INF)", sep="", end="")
+            if (i + 1) % 7 != 0 and i < len(self.vertices) - 1:
+                print(", ", end="")
+            else:
+                print("\n\t\t", end="")
+            stdout.flush()
 
-    vertices = [key for key in adjacency_list]
+    def find_heuristic(self, start):
+        queue = [start]
+        visited = set(start)
+        dist = 0
 
-    heuristics = {}
+        while queue:
+            size = len(queue)
 
-    if choice == 1:
-        for vertex in vertices:
-            if vertex == end_vertex:
-                heuristics[vertex] = 0
-            else:    
-                heuristics[vertex] = find_heuristic(adjacency_list, vertex, end_vertex)
+            for _ in range(size):
+                node = queue.pop(0)
+                if node == self.end:
+                    return dist * 10
 
-    else:
-        for vertex in vertices:
-            heuristics[vertex] = int(input(f"Enter heuristic for {vertex}: "))
+                for neighbor in self.adjacency_list[node]:
+                    if neighbor not in visited:
+                        visited.add(neighbor)
+                        queue.append(neighbor)
 
-    print("\nHeuristics:\t", end="")
-    time.sleep(ONE_FIFTH_SEC)
-    for i, vertex in enumerate(vertices):
-        print(f"({vertex}: ", f"{heuristics[vertex]:3d})" if heuristics[vertex] < INF else "INF)", sep="", end="")
-        if (i + 1) % 7 != 0 and i < len(vertices) - 1:
-            print(", ", end="")
-        else:
-            print("\n\t\t", end="")
-        sys.stdout.flush()
-        time.sleep(ONE_FIFTH_SEC)
-        
-    return heuristics
+            dist += 1
 
-
-def get_heuristics_from_file(adjacency_list, end_vertex, file_in):
-    print("\nHow do you want your heuristics:\n\t1. Calculated\n\t2. Custom input")
-    print("\nEnter your Choice: ", end="")
-    sys.stdout.flush()
-    choice = int(file_in.readline().strip())
-
-    vertices = [key for key in adjacency_list]
-
-    heuristics = {}
-
-    if choice == 1:
-        for vertex in vertices:
-            if vertex == end_vertex:
-                heuristics[vertex] = 0
-            else:    
-                heuristics[vertex] = find_heuristic(adjacency_list, vertex, end_vertex)
-
-    else:
-        for vertex in vertices:
-            print(f"Enter heuristic for {vertex}: ", end="")
-            sys.stdout.flush()
-            heuristics[vertex] = int(file_in.readline().strip())
-
-    print("\nHeuristics:\t", end="")
-    time.sleep(ONE_FIFTH_SEC)
-    for i, vertex in enumerate(vertices):
-        print(f"({vertex}: ", f"{heuristics[vertex]:3d})" if heuristics[vertex] < INF else "INF)", sep="", end="")
-        if (i + 1) % 7 != 0 and i < len(vertices) - 1:
-            print(", ", end="")
-        else:
-            print("\n\t\t", end="")
-        sys.stdout.flush()
-        time.sleep(ONE_FIFTH_SEC)
-        
-    return heuristics
+        return INF
 
 
 def main():
-    print("How do you want your input:\n\t1. Stdin\n\t2. File path")
-    choice = int(input("\nEnter your choice: "))
-    if choice == 1:
-        adjacency_list = get_adjacency_list()
+    input = Input()
 
-        start = input("Enter starting node: ")
-        end = input("Enter destination node: ")
-        depth = int(input("Enter depth for depth limited search: "))
-
-        heuristics = get_heuristics(adjacency_list, end)
-    
-    else:
-        print("\n", os.getcwd(), sep="")
-        with open(input("\nEnter file path: "), "r") as file_in:
-            adjacency_list = get_adjacency_list_from_file(file_in)
-
-            print("Enter starting node: ", end="")
-            sys.stdout.flush()
-            start = file_in.readline().strip()
-            print("Enter destination node: ", end="")
-            sys.stdout.flush()
-            end = file_in.readline().strip()
-            print("Enter depth for depth limited search: ", end="")
-            sys.stdout.flush()
-            depth = int(file_in.readline().strip())
-
-            heuristics = get_heuristics_from_file(adjacency_list, end, file_in)
-
-    graph = Graph(adjacency_list, heuristics)
+    graph = AStarVsDLS(input.adjacency_list, input.heuristics)
 
     print()
 
-    start_time = time.perf_counter() * 1e6
-    a_star_success = graph.a_star_algorithm(start, end)
-    end_time_a_star = time.perf_counter() * 1e6 - start_time
+    start_time = perf_counter() * 1e6
+    a_star_success = graph.a_star_algorithm(input.start, input.end)
+    end_time_a_star = perf_counter() * 1e6 - start_time
 
     if a_star_success:
         i_max = len(graph.a_star_path) - 1
 
         print("Path found using A-star search!\t\t", end="")
-        sys.stdout.flush()
+        stdout.flush()
         for i, vertex in enumerate(graph.a_star_path):
             print(vertex, sep="", end="")
             if i == i_max:
                 print("\n")
             else:
                 print(" -> ", end="")
-            sys.stdout.flush()
-            time.sleep(ONE_FIFTH_SEC)
+            stdout.flush()
     else:
         print("Path not found using A-star search!")
 
-    start_time = time.perf_counter() * 1e6
-    dls_success = graph.depth_limited_search(start, end, depth)
-    end_time_dls = time.perf_counter() * 1e6 - start_time
+    start_time = perf_counter() * 1e6
+    dls_success = graph.depth_limited_search(
+        input.start, input.end, input.depth)
+    end_time_dls = perf_counter() * 1e6 - start_time
 
     if dls_success:
         i_max = len(graph.dls_path) - 1
 
         print("Path found using Depth Limited search!\t", end="")
-        sys.stdout.flush()
+        stdout.flush()
         for i, vertex in enumerate(graph.dls_path):
             print(vertex, sep="", end="")
             if i == i_max:
                 print("\n")
             else:
                 print(" -> ", end="")
-            sys.stdout.flush()
-            time.sleep(ONE_FIFTH_SEC)
+            stdout.flush()
     else:
         print("Path not found using Depth Limited search!")
 
     print("\n", "=" * 30, " Algorithm Analysis ", "=" * 30, sep="")
-    time.sleep(ONE_FIFTH_SEC)
-
     print(f"\nA-star search took\t\t\t\t{end_time_a_star:3.2f} microseconds")
-    time.sleep(ONE_FIFTH_SEC)
     print(f"Depth Limited search took\t\t\t{end_time_dls:3.2f} microseconds")
-    time.sleep(ONE_FIFTH_SEC)
-
     print("\n", "=" * 80, sep="")
-    time.sleep(ONE_FIFTH_SEC)
 
     diff = end_time_dls - end_time_a_star
     if diff < 0:
         print(
             f"Depth Limited search was faster by\t\t{-diff:3.2f} microseconds")
-        time.sleep(ONE_FIFTH_SEC)
     elif diff > 0:
         print(f"A-star search was faster by\t\t\t{diff:3.2f} microseconds")
-        time.sleep(ONE_FIFTH_SEC)
     else:
         print("Both searches finished at the same time")
-        time.sleep(ONE_FIFTH_SEC)
 
     print("=" * 80)
-    time.sleep(ONE_FIFTH_SEC)
-
     print(f"\nA-star search visits\t\t\t\t{graph.a_star_count}")
-    time.sleep(ONE_FIFTH_SEC)
     print(f"Depth Limited search visits\t\t\t{graph.dls_count}")
-    time.sleep(ONE_FIFTH_SEC)
-
     print("\n", "=" * 80, sep="")
-    time.sleep(ONE_FIFTH_SEC)
 
     diff = graph.a_star_count - graph.dls_count
     if diff < 0:
         print(f"A-star search beats Depth Limited search by\t{-diff} visits")
-        time.sleep(ONE_FIFTH_SEC)
     else:
         print(f"Depth Limited search beats A-star search by\t{diff} visits")
-        time.sleep(ONE_FIFTH_SEC)
 
     print("=" * 80)
-    time.sleep(ONE_FIFTH_SEC)
 
     a_star_cost = sum(graph.adjacency_list[graph.a_star_path[i]][graph.a_star_path[i + 1]]
                       for i in range(len(graph.a_star_path) - 1))
@@ -451,26 +352,18 @@ def main():
                    for i in range(len(graph.dls_path) - 1))
 
     print(f"\nA-star search found a path that costs\t\t{a_star_cost}")
-    time.sleep(ONE_FIFTH_SEC)
     print(f"Depth Limited search found a path that costs\t{dls_cost}")
-    time.sleep(ONE_HUNDREDTH_SEC)
-
     print("\n", "=" * 80, sep="")
-    time.sleep(ONE_FIFTH_SEC)
 
     diff = a_star_cost - dls_cost
     if diff < 0:
         print(f"A-star search found a path cheaper by\t\t{-diff}")
-        time.sleep(ONE_FIFTH_SEC)
     elif diff > 0:
         print(f"Depth Limited search found a path cheaper by\t{diff}")
-        time.sleep(ONE_FIFTH_SEC)
     else:
         print(f"Both searches found the same path")
-        time.sleep(ONE_FIFTH_SEC)
 
     print("=" * 80)
-    time.sleep(ONE_FIFTH_SEC)
 
 
 if __name__ == "__main__":
