@@ -94,22 +94,22 @@ class AStarVsDLS:
 
 class Input:
     def __init__(self):
-        print("How do you want your input:\n\t1. Stdin\n\t2. File path")
-        choice = int(input("\nEnter your choice: "))
+        print('How do you want your input:\n\t1. Stdin\n\t2. File path')
+        choice = int(input('\nEnter your choice: '))
         match choice:
             case 1:
                 self.get_adjacency_list()
 
-                self.start = input("Enter starting node: ")
-                self.end = input("Enter destination node: ")
+                self.start = input('Enter starting node: ')
+                self.end = input('Enter destination node: ')
                 self.depth = int(
-                    input("Enter depth for depth limited search: "))
+                    input('Enter depth for depth limited search: '))
 
                 self.get_heuristics()
 
             case 2:
-                print("\n", getcwd(), sep="")
-                with open(input("\nEnter file path: "), "r") as file_in:
+                print('\n', getcwd(), sep='')
+                with open(input('\nEnter file path: '), 'r') as file_in:
                     self.get_adjacency_list(file_in)
 
                     self.start = file_in.readline().strip()
@@ -133,32 +133,32 @@ class Input:
 
     def read_custom_adjacency_list(self, file_in=stdin):
         if file_in == stdin:
-            print("\nEnter the adjacency list", end=" ")
+            print('\nEnter the adjacency list', end=' ')
             print(
-                "format: \"vertex_name,weight\" pairs separated by space, \"None\" for empty list):")
+                'format: \'vertex_name,weight\' pairs separated by space, \'None\' for empty list):')
 
         for vertex in self.vertices:
             if file_in == stdin:
-                print(f"For {vertex}: ", end="")
+                print(f'For {vertex}: ', end='')
                 stdout.flush()
 
             line = file_in.readline().strip()
 
             self.adjacency_list[vertex] = {}
 
-            if line == "None":
+            if line == 'None':
                 continue
 
             pairs = line.split()
 
             for pair in pairs:
-                comma_sep_fields = pair.split(sep=",")
+                comma_sep_fields = pair.split(sep=',')
                 self.adjacency_list[vertex][comma_sep_fields[0]] = int(
                     comma_sep_fields[1])
 
     def get_adjacency_list(self, file_in=stdin):
         if file_in == stdin:
-            print("Enter number of vertices: ", end="")
+            print('Enter number of vertices: ', end='')
             stdout.flush()
 
         n_vertices = int(file_in.readline().strip())
@@ -167,14 +167,14 @@ class Input:
             return
 
         self.vertices = [chr(i + 65) for i in range(n_vertices)]
-        print(f"Vertices: {self.vertices}\n")
+        print(f'Vertices: {self.vertices}\n')
 
         self.adjacency_list = {}
 
         if file_in == stdin:
             print(
-                "How do you want your graph:\n\t1. Randomly generated\n\t2. Custom input")
-            print("\nEnter your Choice: ", end="")
+                'How do you want your graph:\n\t1. Randomly generated\n\t2. Custom input')
+            print('\nEnter your Choice: ', end='')
             stdout.flush()
 
         choice = int(file_in.readline().strip())
@@ -189,22 +189,22 @@ class Input:
         self.print_graph()
 
     def print_graph(self):
-        print("\nGraph:")
+        print('\nGraph:')
         for vertex in self.vertices:
-            print(f"{vertex}: ", end="")
+            print(f'{vertex}: ', end='')
             if not self.adjacency_list[vertex]:
-                print("{}")
+                print('{}')
                 continue
 
             i_max = len(self.adjacency_list[vertex]) - 1
 
-            print("{", end="")
+            print('{', end='')
             for i, (neighbor, weight) in enumerate(self.adjacency_list[vertex].items()):
-                print(f"{neighbor}: {weight:3d}", end="")
+                print(f'{neighbor}: {weight:3d}', end='')
                 if i == i_max:
-                    print("}")
+                    print('}')
                 else:
-                    print(", ", end="")
+                    print(', ', end='')
 
                 stdout.flush()
 
@@ -215,8 +215,8 @@ class Input:
 
         if file_in == stdin:
             print(
-                "\nHow do you want your heuristics:\n\t1. Calculated\n\t2. Custom input")
-            print("\nEnter your Choice: ", end="")
+                '\nHow do you want your heuristics:\n\t1. Calculated\n\t2. Custom input')
+            print('\nEnter your Choice: ', end='')
             stdout.flush()
 
         choice = int(file_in.readline().strip())
@@ -233,7 +233,7 @@ class Input:
             case 2:
                 for vertex in self.vertices:
                     if file_in == stdin:
-                        print(f"Enter heuristic for {vertex}: ", end="")
+                        print(f'Enter heuristic for {vertex}: ', end='')
                         stdout.flush()
 
                     self.heuristics[vertex] = int(file_in.readline().strip())
@@ -241,14 +241,14 @@ class Input:
         self.print_heuristics()
 
     def print_heuristics(self):
-        print("\nHeuristics:\t", end="")
+        print('\nHeuristics:\t', end='')
         for i, vertex in enumerate(self.vertices):
             print(
-                f"({vertex}: ", f"{self.heuristics[vertex]:3d})" if self.heuristics[vertex] < INF else "INF)", sep="", end="")
+                f'({vertex}: ', f'{self.heuristics[vertex]:3d})' if self.heuristics[vertex] < INF else 'INF)', sep='', end='')
             if (i + 1) % 7 != 0 and i < len(self.vertices) - 1:
-                print(", ", end="")
+                print(', ', end='')
             else:
-                print("\n\t\t", end="")
+                print('\n\t\t', end='')
             stdout.flush()
 
     def find_heuristic(self, start):
@@ -288,17 +288,17 @@ def main():
     if a_star_success:
         i_max = len(graph.a_star_path) - 1
 
-        print("Path found using A-star search!\t\t", end="")
+        print('Path found using A-star search!\t\t', end='')
         stdout.flush()
         for i, vertex in enumerate(graph.a_star_path):
-            print(vertex, sep="", end="")
+            print(vertex, sep='', end='')
             if i == i_max:
-                print("\n")
+                print('\n')
             else:
-                print(" -> ", end="")
+                print(' -> ', end='')
             stdout.flush()
     else:
-        print("Path not found using A-star search!")
+        print('Path not found using A-star search!')
 
     start_time = perf_counter() * 1e6
     dls_success = graph.depth_limited_search(
@@ -308,64 +308,64 @@ def main():
     if dls_success:
         i_max = len(graph.dls_path) - 1
 
-        print("Path found using Depth Limited search!\t", end="")
+        print('Path found using Depth Limited search!\t', end='')
         stdout.flush()
         for i, vertex in enumerate(graph.dls_path):
-            print(vertex, sep="", end="")
+            print(vertex, sep='', end='')
             if i == i_max:
-                print("\n")
+                print('\n')
             else:
-                print(" -> ", end="")
+                print(' -> ', end='')
             stdout.flush()
     else:
-        print("Path not found using Depth Limited search!")
+        print('Path not found using Depth Limited search!')
 
-    print("\n", "=" * 30, " Algorithm Analysis ", "=" * 30, sep="")
-    print(f"\nA-star search took\t\t\t\t{end_time_a_star:3.2f} microseconds")
-    print(f"Depth Limited search took\t\t\t{end_time_dls:3.2f} microseconds")
-    print("\n", "=" * 80, sep="")
+    print('\n', '=' * 30, ' Algorithm Analysis ', '=' * 30, sep='')
+    print(f'\nA-star search took\t\t\t\t{end_time_a_star:3.2f} microseconds')
+    print(f'Depth Limited search took\t\t\t{end_time_dls:3.2f} microseconds')
+    print('\n', '=' * 80, sep='')
 
     diff = end_time_dls - end_time_a_star
     if diff < 0:
         print(
-            f"Depth Limited search was faster by\t\t{-diff:3.2f} microseconds")
+            f'Depth Limited search was faster by\t\t{-diff:3.2f} microseconds')
     elif diff > 0:
-        print(f"A-star search was faster by\t\t\t{diff:3.2f} microseconds")
+        print(f'A-star search was faster by\t\t\t{diff:3.2f} microseconds')
     else:
-        print("Both searches finished at the same time")
+        print('Both searches finished at the same time')
 
-    print("=" * 80)
-    print(f"\nA-star search visits\t\t\t\t{graph.a_star_count}")
-    print(f"Depth Limited search visits\t\t\t{graph.dls_count}")
-    print("\n", "=" * 80, sep="")
+    print('=' * 80)
+    print(f'\nA-star search visits\t\t\t\t{graph.a_star_count}')
+    print(f'Depth Limited search visits\t\t\t{graph.dls_count}')
+    print('\n', '=' * 80, sep='')
 
     diff = graph.a_star_count - graph.dls_count
     if diff < 0:
-        print(f"A-star search beats Depth Limited search by\t{-diff} visits")
+        print(f'A-star search beats Depth Limited search by\t{-diff} visits')
     else:
-        print(f"Depth Limited search beats A-star search by\t{diff} visits")
+        print(f'Depth Limited search beats A-star search by\t{diff} visits')
 
-    print("=" * 80)
+    print('=' * 80)
 
     a_star_cost = sum(graph.adjacency_list[graph.a_star_path[i]][graph.a_star_path[i + 1]]
                       for i in range(len(graph.a_star_path) - 1))
     dls_cost = sum(graph.adjacency_list[graph.dls_path[i]][graph.dls_path[i + 1]]
                    for i in range(len(graph.dls_path) - 1))
 
-    print(f"\nA-star search found a path that costs\t\t{a_star_cost}")
-    print(f"Depth Limited search found a path that costs\t{dls_cost}")
-    print("\n", "=" * 80, sep="")
+    print(f'\nA-star search found a path that costs\t\t{a_star_cost}')
+    print(f'Depth Limited search found a path that costs\t{dls_cost}')
+    print('\n', '=' * 80, sep='')
 
     diff = a_star_cost - dls_cost
     if diff < 0:
-        print(f"A-star search found a path cheaper by\t\t{-diff}")
+        print(f'A-star search found a path cheaper by\t\t{-diff}')
     elif diff > 0:
-        print(f"Depth Limited search found a path cheaper by\t{diff}")
+        print(f'Depth Limited search found a path cheaper by\t{diff}')
     else:
-        print(f"Both searches found the same path")
+        print(f'Both searches found the same path')
 
-    print("=" * 80)
+    print('=' * 80)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()
