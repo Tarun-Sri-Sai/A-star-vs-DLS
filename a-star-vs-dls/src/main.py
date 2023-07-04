@@ -214,7 +214,8 @@ class Input:
         self.heuristics = {}
 
         if file_in == stdin:
-            print("\nHow do you want your heuristics:\n\t1. Calculated\n\t2. Custom input")
+            print(
+                "\nHow do you want your heuristics:\n\t1. Calculated\n\t2. Custom input")
             print("\nEnter your Choice: ", end="")
             stdout.flush()
 
