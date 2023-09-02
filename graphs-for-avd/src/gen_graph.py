@@ -5,7 +5,8 @@ def main():
     graphs_path: str = path.join('..', '..', 'a-star-vs-dls', 'graphs')
     files: list[str] = listdir(graphs_path)
     dots_path: str = path.join('..', 'dots')
-    mkdir(dots_path)
+    if not path.isdir(dots_path):
+        mkdir(dots_path)
     for file in files:
         with open(path.join(dots_path, path.splitext(file)[0] + '.dot'), 'w') as writer:
             printed: str = 'digraph {\n'
