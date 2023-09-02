@@ -24,7 +24,7 @@ def main():
                     if (line[0:1], line[5:6]) not in path_set:
                         writer.write('\t' + line + '\n')
                         continue
-                    writer.write('\t' + line[0:-1] + ', color=\'red\']' + '\n')
+                    writer.write('\t' + line[0:-1] + ', color="red"]' + '\n')
         with open(path.join(paths_dir, f'{path.splitext(file)[0]}_2.txt'), 'r') as f:
             graph_path: str = f.read().strip()
         path_nodes: list[str] = graph_path.split(' -> ')
@@ -42,7 +42,7 @@ def main():
                     if (line[0:1], line[5:6]) not in path_set:
                         writer.write('\t' + line + '\n')
                         continue
-                    writer.write('\t' + line[0:-1] + ', color=\'red\']' + '\n')
+                    writer.write('\t' + line[0:-1] + ', color="red"]' + '\n')
 
 
 if __name__ == '__main__':
