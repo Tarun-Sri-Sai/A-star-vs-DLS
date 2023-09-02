@@ -84,7 +84,7 @@ class AStarVsDLS:
 
 class Input:
     def __init__(self):
-        print('How do you want your input:\n\t1. Stdin\n\t2. File path')
+        print('How do you want your input:\n\t1. Stdin\n\t2. graphs directory')
         choice = int(input('\nEnter your choice: '))
         if choice == 1:
             self.get_adjacency_list()
@@ -94,8 +94,8 @@ class Input:
                 input('Enter depth for depth limited search: '))
             self.get_heuristics()
         else:
-            print('\n', os.getcwd(), sep='')
-            with open(input('\nEnter file path: '), 'r') as file_in:
+            file_nodes = input('\nEnter number of nodes: ')
+            with open(os.path.join('..', 'graphs', f'{file_nodes}nodes.txt'), 'r') as file_in:
                 self.get_adjacency_list(file_in)
                 self.start = file_in.readline().strip()
                 self.end = file_in.readline().strip()
