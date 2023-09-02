@@ -1,11 +1,17 @@
-from os import system, listdir, path
+from os import system, listdir, path, mkdir
 
 
 def main():
-    files = listdir('dots')
+    dots_path = path.join('..','dots')
+    pngs_path = path.join('..','pngs')
+    if not path.isdir(pngs_path):
+        mkdir(pngs_path)
+    files = listdir(path.join('..','dots'))
     for file in files:
         file_name = path.splitext(file)[0]
-        system(f'dot -Tpng dots/{file_name}.dot > pngs/{file_name}.png')
+        dot_file = path.join(dots_path, f'{file_name}.dot')
+        png_file = path.join(pngs_path, f'{file_name}.png')
+        system(f'dot -Tpng {dot_file} > {png_file}')
 
 
 if __name__ == '__main__':
