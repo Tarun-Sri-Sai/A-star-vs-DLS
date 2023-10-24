@@ -35,12 +35,7 @@ class InputParser:
             return
         self.vertices = [chr(i + 65) for i in range(n_vertices)]
         self.adjacency_list = {}
-        choice = int(self.file_in.readline().strip())
-        if choice == 1:
-            self.adjancency_list = random_adj.generate_random_adjacency_list(
-                self.vertices)
-        else:
-            self.read_custom_adjacency_list()
+        self.read_custom_adjacency_list()
         self.print_graph()
 
     def print_graph(self):
@@ -63,16 +58,11 @@ class InputParser:
 
     def get_heuristics(self):
         self.heuristics = {}
-        choice = int(self.file_in.readline().strip())
-        if choice == 1:
-            for vertex in self.vertices:
-                if vertex == self.end:
-                    self.heuristics[vertex] = 0
-                    continue
-                self.heuristics[vertex] = self.find_heuristic(vertex)
-        else:
-            for vertex in self.vertices:
-                self.heuristics[vertex] = int(self.file_in.readline().strip())
+        for vertex in self.vertices:
+            if vertex == self.end:
+                self.heuristics[vertex] = 0
+                continue
+            self.heuristics[vertex] = self.find_heuristic(vertex)
         self.print_heuristics()
 
     def print_heuristics(self):
