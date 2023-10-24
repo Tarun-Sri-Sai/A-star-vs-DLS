@@ -1,4 +1,4 @@
-from os import path
+import os
 
 
 def get_info(line):
@@ -19,7 +19,7 @@ def get_info(line):
 def main():
     n_vertices = int(input('Enter no of vertices: '))
 
-    with open(path.join('..' , 'graphs', str(n_vertices) + '_nodes.txt'), 'w') as fwrite:
+    with open(os.path.join('..', 'graphs', str(n_vertices) + '_nodes.txt'), 'w') as fwrite:
         fwrite.write(str(n_vertices) + '\n')
         fwrite.write(str(2) + '\n')
 
