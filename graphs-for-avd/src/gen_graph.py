@@ -12,7 +12,6 @@ def main():
             printed: str = 'digraph {\n'
             with open(os.path.join(graphs_path, file), 'r') as reader:
                 nnodes: int = int(reader.readline().strip())
-                reader.readline()
                 vertices: list[str] = [chr(0x41 + i) for i in range(nnodes)]
                 for vertex in vertices:
                     for pair in reader.readline().strip().split():

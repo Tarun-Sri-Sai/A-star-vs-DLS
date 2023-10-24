@@ -17,7 +17,6 @@ def main():
     for n_vertices in n_vertices_list:
         with open(os.path.join(graphs_dir, f'{n_vertices}_nodes.txt'), 'w') as fwrite:
             print(f'{n_vertices}', file=fwrite)
-            print(f'{2}', file=fwrite)
 
             vertices = [chr(i + 65) for i in range(n_vertices)]
             adjacency_list = random_adj.generate_random_adjacency_list(
@@ -35,7 +34,6 @@ def main():
                 ...
             print(f'{end}', file=fwrite)
             print(f'{random.randint(5, n_vertices)}', file=fwrite)
-            print(f'{1}', file=fwrite)
 
 
 if __name__ == '__main__':
