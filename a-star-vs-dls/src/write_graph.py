@@ -1,37 +1,41 @@
 import os
-
-
-def get_info(line):
-    if line == '{}':
-        return 'None'
-
-    result = ''
-    trimmed_line = line[1:-1]
-    vertex_pairs = trimmed_line.split(', ')
-
-    for vertex_pair in vertex_pairs:
-        tokens = vertex_pair.split(': ')
-        result += str(tokens[0] + ',' + tokens[1].strip() + ' ')
-
-    return result[:-1]
+import random
+import shutil
+import random_adj
 
 
 def main():
-    n_vertices = int(input('Enter no of vertices: '))
+    valid_n_vertices_list = list(range(5, 27))
+    n_vertices_list = set()
+    while len(n_vertices_list) < 3:
+        n_vertices_list.add(random.choice(valid_n_vertices_list))
+    n_vertices_list = list(n_vertices_list)
+    graphs_dir = os.path.join('..', 'graphs')
+    if os.path.isdir(graphs_dir):
+        shutil.rmtree(graphs_dir)
+    os.mkdir(graphs_dir)
+    for n_vertices in n_vertices_list:
+        with open(os.path.join(graphs_dir, f'{n_vertices}_nodes.txt'), 'w') as fwrite:
+            print(f'{n_vertices}', file=fwrite)
+            print(f'{2}', file=fwrite)
 
-    with open(os.path.join('..', 'graphs', str(n_vertices) + '_nodes.txt'), 'w') as fwrite:
-        fwrite.write(str(n_vertices) + '\n')
-        fwrite.write(str(2) + '\n')
+            vertices = [chr(i + 65) for i in range(n_vertices)]
+            adjacency_list = random_adj.generate_random_adjacency_list(
+                vertices)
+            for _, neighbors in adjacency_list.items():
+                if len(neighbors) == 0:
+                    print('None', file=fwrite)
+                    continue
+                print(' '.join([f'{k},{v}' for k, v in neighbors.items()]),
+                      file=fwrite)
 
-        for i in range(n_vertices):
-            line = input(f'Enter line {i + 1}: ')
-            line_trimmed = line[3::]
-            fwrite.write(get_info(line_trimmed) + '\n')
-
-        fwrite.write(input('Enter start: ') + '\n')
-        fwrite.write(input('Enter end: ') + '\n')
-        fwrite.write(str(int(input('Enter depth: '))) + '\n')
-        fwrite.write(str(1) + '\n')
+            start = random.choice(vertices)
+            print(f'{start}', file=fwrite)
+            while (end := random.choice(vertices)) == start:
+                ...
+            print(f'{end}', file=fwrite)
+            print(f'{random.randint(5, n_vertices)}', file=fwrite)
+            print(f'{1}', file=fwrite)
 
 
 if __name__ == '__main__':

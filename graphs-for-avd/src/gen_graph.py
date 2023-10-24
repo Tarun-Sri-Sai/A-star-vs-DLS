@@ -1,12 +1,12 @@
 import os
+import dir_create
 
 
 def main():
     graphs_path: str = os.path.join('..', '..', 'a-star-vs-dls', 'graphs')
     files: list[str] = os.listdir(graphs_path)
     dots_path: str = os.path.join('..', 'dots')
-    if not os.path.isdir(dots_path):
-        os.mkdir(dots_path)
+    dir_create.make_new_dir(dots_path)
     for file in files:
         with open(os.path.join(dots_path, os.path.splitext(file)[0] + '.dot'), 'w') as writer:
             printed: str = 'digraph {\n'
