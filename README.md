@@ -1,13 +1,13 @@
-# A-star-vs-DLS
+# A* vs DLS
 
 ## Description
 
-This project was used to generate the results for the A-Star-vs-DLS research paper. It provides the following for the paper:
+This repository was used to generate the results for the research paper [A Performance Analysis on A* vs Depth Limited Search: A Case Study](https://doi.org/10.1051/e3sconf/202339101140). It provides the following for the paper:
 
-- graphs
-- paths
-- logs
-- images
+- Graphs for feeding into the algorithms: a-star-vs-dls/graphs
+- Paths found using the search algorithms: a-star-vs-dls/paths
+- Logs of path calculation: a-star-vs-dls/logs
+- Images of graphs: graphs-for-avd/pngs
 
 ## Requirements
 
