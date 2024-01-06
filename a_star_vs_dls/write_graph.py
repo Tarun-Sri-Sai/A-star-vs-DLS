@@ -29,4 +29,4 @@ def write_graph(n_vertices_list):
                 pass
             print(f'{end}', file=fwrite)
 
-            print(f'{randint(5, n_vertices)}', file=fwrite)
+            print(f'{randint(1, n_vertices)}', file=fwrite)
