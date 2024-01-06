@@ -1,13 +1,14 @@
-import os
+from os import listdir
+from os.path import join, splitext, exists
 
 
 def main():
-    dir_path: str = os.path.join('..', 'dots')
-    files: list[str] = os.listdir(dir_path)
+    dir_path: str = join('graphs_for_avd', 'dots')
+    files: list[str] = listdir(dir_path)
     for file in files:
-        paths_dir = os.path.join('..', '..', 'a-star-vs-dls', 'paths')
-        file_1 = os.path.join(paths_dir, f'{os.path.splitext(file)[0]}_1.txt')
-        if os.path.exists(file_1):
+        paths_dir = join('a_star_vs_dls', 'paths')
+        file_1 = join(paths_dir, f'{splitext(file)[0]}_1.txt')
+        if exists(file_1):
             with open(file_1, 'r') as f:
                 graph_path: str = f.read().strip()
             path_nodes: list[str] = graph_path.split(' -> ')
@@ -17,8 +18,8 @@ def main():
             path_set = set(path_list)
         else:
             path_set = set()
-        with open(os.path.join(dir_path, os.path.splitext(file)[0] + '_c1.dot'), 'w') as writer:
-            with open(os.path.join(dir_path, file), 'r') as reader:
+        with open(join(dir_path, splitext(file)[0] + '_c1.dot'), 'w') as writer:
+            with open(join(dir_path, file), 'r') as reader:
                 for line in reader.readlines():
                     line = line.strip()
                     if line == '}' or line == 'digraph {\nlabel: \'A-star\'\n':
@@ -29,8 +30,8 @@ def main():
                         continue
                     writer.write('\t' + line[0:-1]
                                  + ', color="red"]' + '\n')
-        file_2 = os.path.join(paths_dir, f'{os.path.splitext(file)[0]}_2.txt')
-        if os.path.exists(file_2):
+        file_2 = join(paths_dir, f'{splitext(file)[0]}_2.txt')
+        if exists(file_2):
             with open(file_2, 'r') as f:
                 graph_path: str = f.read().strip()
             path_nodes: list[str] = graph_path.split(' -> ')
@@ -40,8 +41,8 @@ def main():
             path_set = set(path_list)
         else:
             path_set = set()
-        with open(os.path.join(dir_path, os.path.splitext(file)[0] + '_c2.dot'), 'w') as writer:
-            with open(os.path.join(dir_path, file), 'r') as reader:
+        with open(join(dir_path, splitext(file)[0] + '_c2.dot'), 'w') as writer:
+            with open(join(dir_path, file), 'r') as reader:
                 for line in reader.readlines():
                     line = line.strip()
                     if line == '}' or line == 'digraph {\nlabel: \'DLS\'\n':
