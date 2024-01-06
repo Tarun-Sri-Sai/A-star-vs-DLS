@@ -1,9 +1,10 @@
-import sys
-import time
-import os
-import input_parser
-import a_star_vs_dls
-import dir_create
+from time import perf_counter
+from os import listdir
+from os.path import join, splitext
+from a_star_vs_dls.input_parser import InputParser
+from a_star_vs_dls.a_star_vs_dls import AStarVsDLS
+from dir_create import make_new_dir
+
 
 def print_path(path, file):
     i_max = len(path) - 1
@@ -16,17 +17,17 @@ def print_path(path, file):
 
 
 def run(file_in, logs_writer, paths_dir):
-    input = input_parser.InputParser(file_in, logs_writer)
-    graph = a_star_vs_dls.AStarVsDLS(
+    input = InputParser(file_in, logs_writer)
+    graph = AStarVsDLS(
         input.adjacency_list,
         input.heuristics)
     print('',
           file=logs_writer)
-    start_time = time.perf_counter() * 1e6
+    start_time = perf_counter() * 1e6
     a_star_success = graph.a_star_algorithm(input.start, input.end)
-    end_time_a_star = time.perf_counter() * 1e6 - start_time
+    end_time_a_star = perf_counter() * 1e6 - start_time
     n_vertices = len(input.vertices)
-    a_star_path_file = os.path.join(paths_dir, f'{n_vertices}_nodes_1.txt')
+    a_star_path_file = join(paths_dir, f'{n_vertices}_nodes_1.txt')
     if a_star_success:
         print('Path found using A-star search!\t\t', end='',
               file=logs_writer)
@@ -36,11 +37,11 @@ def run(file_in, logs_writer, paths_dir):
     else:
         print('Path not found using A-star search!',
               file=logs_writer)
-    start_time = time.perf_counter() * 1e6
+    start_time = perf_counter() * 1e6
     dls_success = graph.depth_limited_search(
         input.start, input.end, input.depth)
-    end_time_dls = time.perf_counter() * 1e6 - start_time
-    dls_path_file = os.path.join(paths_dir, f'{n_vertices}_nodes_2.txt')
+    end_time_dls = perf_counter() * 1e6 - start_time
+    dls_path_file = join(paths_dir, f'{n_vertices}_nodes_2.txt')
     if dls_success:
         print('Path found using Depth Limited search!\t', end='',
               file=logs_writer)
@@ -110,15 +111,15 @@ def run(file_in, logs_writer, paths_dir):
 
 
 def main():
-    graphs_dir = os.path.join('..', 'graphs')
-    logs_dir = os.path.join('..', 'logs')
-    dir_create.make_new_dir(logs_dir)
-    paths_dir = os.path.join('..', 'paths')
-    dir_create.make_new_dir(paths_dir)
-    for file in os.listdir(graphs_dir):
-        with open(os.path.join(graphs_dir, file), 'r') as file_in:
-            file_name = os.path.splitext(file)[0]
-            with open(os.path.join(logs_dir, f'{file_name}.log'), 'w') as logs_writer:
+    graphs_dir = join('a_star_vs_dls', 'graphs')
+    logs_dir = join('a_star_vs_dls', 'logs')
+    make_new_dir(logs_dir)
+    paths_dir = join('a_star_vs_dls', 'paths')
+    make_new_dir(paths_dir)
+    for file in listdir(graphs_dir):
+        with open(join(graphs_dir, file), 'r') as file_in:
+            file_name = splitext(file)[0]
+            with open(join(logs_dir, f'{file_name}.log'), 'w') as logs_writer:
                 run(file_in, logs_writer, paths_dir)
 
 

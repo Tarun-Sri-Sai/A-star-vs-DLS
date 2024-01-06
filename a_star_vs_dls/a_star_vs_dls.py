@@ -1,7 +1,7 @@
-import sys
+from sys import setrecursionlimit
 
 
-sys.setrecursionlimit(int(1e8))
+setrecursionlimit(int(1e8))
 
 
 class AStarVsDLS:

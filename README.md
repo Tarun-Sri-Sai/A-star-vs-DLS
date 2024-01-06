@@ -19,8 +19,10 @@ This project requires the following softwares:
 
 ## Usage
 
-In a Windows system, open terminal and go to the root of this repo. Then run the following command
+In a Windows system, open terminal and go to the root of this repo. Then run the following commands:
 
 ```bash
-.\run.bat
+%YOUR_PYTHON_EXECUTABLE% -m venv .venv
+.venv/Scripts/activate
+python run.py
 ```

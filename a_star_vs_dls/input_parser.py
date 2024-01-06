@@ -1,5 +1,4 @@
-import sys
-import random_adj
+from sys import stdin
 
 
 INF = int(1e9)
@@ -17,7 +16,7 @@ class InputParser:
 
     def read_custom_adjacency_list(self):
         for vertex in self.vertices:
-            if self.file_in == sys.stdin:
+            if self.file_in == stdin:
                 print(f'For {vertex}: ', end='')
             line = self.file_in.readline().strip()
             self.adjacency_list[vertex] = {}
