@@ -34,7 +34,8 @@ class AStarVsDLS:
             n = None
 
             for v in open_list:
-                if n == None or g[v] + self.get_heuristic(v) < g[n] + self.get_heuristic(n):
+                if (n == None or g[v] + self.get_heuristic(v)
+                        < g[n] + self.get_heuristic(n)):
                     n = v
 
             if n == None:
