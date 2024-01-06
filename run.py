@@ -8,6 +8,7 @@ from graphs_for_avd.make_png import main as make_png
 def main():
     write_graph()
     run()
+    
     gen_graph()
     color_graph()
     make_png()
