@@ -10,7 +10,9 @@ def generate_random_adjacency_list(vertices):
         for _ in range(randint(0, n_vertices - 1)):
             curr_vertex = vertices[randint(0, n_vertices - 1)]
 
-            while curr_vertex == vertex or curr_vertex in adjacency_list[vertex]:
+            while (curr_vertex == vertex
+                   or curr_vertex in adjacency_list[vertex]):
+
                 curr_vertex = vertices[randint(0, n_vertices - 1)]
 
             adjacency_list[vertex][curr_vertex] = randint(1, 99)

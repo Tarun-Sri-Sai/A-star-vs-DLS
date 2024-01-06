@@ -55,9 +55,12 @@ class InputParser:
 
             i_max = len(self.adjacency_list[vertex]) - 1
             print('{', end='', file=self.logs_writer)
-            for i, (neighbor, weight) in enumerate(self.adjacency_list[vertex].items()):
-                print(f'{neighbor}: {weight:3d}',
-                      end='', file=self.logs_writer)
+
+            neighbors = self.adjacency_list[vertex].items()
+
+            for i, (neighbor, weight) in enumerate(neighbors):
+                print(f'{neighbor}: {weight:3d}', end='',
+                      file=self.logs_writer)
 
                 if i == i_max:
                     print('}', file=self.logs_writer)
