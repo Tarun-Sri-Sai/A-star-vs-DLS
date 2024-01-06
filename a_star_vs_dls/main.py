@@ -19,7 +19,7 @@ def print_path(path, file):
 
 def log_a_star_path(a_star_success, a_star_path_file, graph, logs_writer):
     if a_star_success:
-        print('Path found using A-star search!\t\t', end='',
+        print('Path found using A-star search!\t\t\t', end='',
               file=logs_writer)
         print_path(graph.a_star_path, logs_writer)
 
@@ -42,7 +42,7 @@ def log_dls_path(dls_success, dls_path_file, graph, logs_writer):
 
 
 def log_time_diff(end_time_a_star, end_time_dls, logs_writer):
-    print(f'\nA-star search took\t\t\t\t{end_time_a_star:3.2f} microseconds',
+    print(f'\nA-star search took\t\t\t\t\t{end_time_a_star:3.2f} microseconds',
           file=logs_writer)
     print(f'Depth Limited search took\t\t\t{end_time_dls:3.2f} microseconds',
           file=logs_writer)
@@ -79,7 +79,7 @@ def log_visits_diff(graph, logs_writer):
 
 
 def log_cost_diff(a_star_cost, dls_cost, logs_writer):
-    print(f'\nA-star search found a path that costs\t\t{a_star_cost}',
+    print(f'\nA-star search found a path that costs\t\t\t{a_star_cost}',
           file=logs_writer)
     print(f'Depth Limited search found a path that costs\t{dls_cost}',
           file=logs_writer)
