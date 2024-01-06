@@ -4,13 +4,7 @@ from random import choice, randint
 from a_star_vs_dls.random_adj import generate_random_adjacency_list
 
 
-def main():
-    valid_n_vertices_list = list(range(5, 27))
-    n_vertices_list = set()
-    while len(n_vertices_list) < 3:
-        n_vertices_list.add(choice(valid_n_vertices_list))
-    n_vertices_list = list(n_vertices_list)
-
+def write_graph(n_vertices_list):
     graphs_dir = join('a_star_vs_dls', 'graphs')
     make_new_dir(graphs_dir)
 
@@ -36,7 +30,3 @@ def main():
             print(f'{end}', file=fwrite)
 
             print(f'{randint(5, n_vertices)}', file=fwrite)
-
-
-if __name__ == '__main__':
-    main()
