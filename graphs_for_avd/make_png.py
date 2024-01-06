@@ -8,7 +8,7 @@ def main():
     pngs_path = join('graphs_for_avd', 'pngs')
 
     make_new_dir(pngs_path)
-    
+
     for file in listdir(dots_path):
         file_name = splitext(file)[0]
 

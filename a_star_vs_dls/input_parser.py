@@ -37,7 +37,7 @@ class InputParser:
         n_vertices = int(self.file_in.readline().strip())
         if n_vertices > 26:
             return
-        
+
         self.vertices = [chr(i + 65) for i in range(n_vertices)]
         self.adjacency_list = {}
 
@@ -56,7 +56,8 @@ class InputParser:
             i_max = len(self.adjacency_list[vertex]) - 1
             print('{', end='', file=self.logs_writer)
             for i, (neighbor, weight) in enumerate(self.adjacency_list[vertex].items()):
-                print(f'{neighbor}: {weight:3d}', end='', file=self.logs_writer)
+                print(f'{neighbor}: {weight:3d}',
+                      end='', file=self.logs_writer)
 
                 if i == i_max:
                     print('}', file=self.logs_writer)
@@ -80,11 +81,12 @@ class InputParser:
         print('\nHeuristics:\t', end='', file=self.logs_writer)
         for i, vertex in enumerate(self.vertices):
             print(f'({vertex}: ',
-                  f'{self.heuristics[vertex]:3d})' if self.heuristics[vertex] < INF else 'INF)',
+                  f'{self.heuristics[vertex]:3d})'
+                  if self.heuristics[vertex] < INF else 'INF)',
                   sep='',
                   end='',
                   file=self.logs_writer)
-            
+
             if (i + 1) % 7 != 0 and i < len(self.vertices) - 1:
                 print(', ', end='', file=self.logs_writer)
             else:
@@ -94,7 +96,7 @@ class InputParser:
         queue = [start]
         visited = set(start)
         dist = 0
-        
+
         while queue:
             size = len(queue)
             for _ in range(size):
@@ -102,7 +104,7 @@ class InputParser:
 
                 if node == self.end:
                     return dist * 10
-                
+
                 for neighbor in self.adjacency_list[node]:
                     if neighbor not in visited:
                         visited.add(neighbor)

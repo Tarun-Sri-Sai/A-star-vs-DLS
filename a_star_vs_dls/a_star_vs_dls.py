@@ -27,16 +27,19 @@ class AStarVsDLS:
 
         g = {}
         g[start_node] = 0
-        
+
         parents = {}
         parents[start_node] = start_node
         while len(open_list) > 0:
             n = None
+
             for v in open_list:
                 if n == None or g[v] + self.get_heuristic(v) < g[n] + self.get_heuristic(n):
                     n = v
+
             if n == None:
                 return False
+
             if n == stop_node:
                 while parents[n] != n:
                     self.a_star_path.append(n)
@@ -64,7 +67,7 @@ class AStarVsDLS:
 
             open_list.remove(n)
             closed_list.add(n)
-            
+
         return False
 
     def depth_limited_search(self, start_vertex, target_vertex, depth_limit):
@@ -74,20 +77,20 @@ class AStarVsDLS:
             return True
         else:
             return False
-       
+
     def dls(self, current_vertex, target_vertex, depth_limit):
         if current_vertex == target_vertex:
             return True
         if depth_limit == 0:
             return False
-        
+
         for neighbor, _ in self.get_neighbors(current_vertex).items():
             self.dls_count += 1
             self.dls_path.append(neighbor)
 
             if self.dls(neighbor, target_vertex, depth_limit - 1):
                 return True
-            
+
             self.dls_path.pop()
-    
+
         return False
