@@ -14,5 +14,5 @@ def generate_random_adjacency_list(vertices):
                 curr_vertex = vertices[randint(0, n_vertices - 1)]
 
             adjacency_list[vertex][curr_vertex] = randint(1, 99)
-            
+
     return adjacency_list
