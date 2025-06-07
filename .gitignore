@@ -1,2 +1,17 @@
-__pycache__
-.venv
+# Ignore all Python cache files
+*.pyc
+
+# Ignore the Python virtual env
+venv
+
+# Ignore input text files
+*.txt
+
+# Ignore log files
+*.log
+
+# Ignore Graphviz files
+*.dot
+
+# Ignore image files
+*.png
